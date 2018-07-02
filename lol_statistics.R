@@ -34,14 +34,14 @@ dados<-dados%>%
         2,3,4,5,6,
         sep = "_")
 
-#Converter os valores para 1 ou 0
+# Converter os valores para 1 ou 0
 dados$result[dados$result=='Victory']<-1
 dados$result[dados$result=='Defeat']<-0
 
-#Junta os nomes do champ como uma única string
+# Converte o tipo
 dados$result<-as.integer(dados$result)
 
-# Obtem a posição que o champ aparece
+# Win rate para toda a base
 tamanho = length(nomes_champ)
 for (x in 1:tamanho){
   champ_posicao<-which(grepl(nomes_champ[x],dados$team_1)|grepl(nomes_champ[x],dados$team_2))
