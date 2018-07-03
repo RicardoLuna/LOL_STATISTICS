@@ -35,21 +35,20 @@ dados<-dados%>%
         sep = "_")
 
 # Converter os valores para 1 ou 0
-dados$result[dados$result=='Victory']<-1
-dados$result[dados$result=='Defeat']<-0
+dados$result[dados$result=='Victory']<-T
+dados$result[dados$result=='Defeat']<-F
 
 # Converte o tipo
-dados$result<-as.integer(dados$result)
+dados$result<-as.logical(dados$result)
 
 # Win rate para toda a base
-tamanho = length(nomes_champ)
+tamanho = length(champ_names)
 for (x in 1:tamanho){
-  champ_posicao<-which(grepl(nomes_champ[x],dados$team_1)|grepl(nomes_champ[x],dados$team_2))
-  win_rate<-as.integer(dados$result[champ_posicao])
+  champ_posicao<-which(grepl(champ_names[x],dados$team_1))
+  champ_posicao2<-which(grepl(champ_names[x],dados$team_2))
+  win_rate<-dados$result[champ_posicao]
+  win_temp<-!dados$result[champ_posicao2]
+  win_rate<-c(win_rate,win_temp)
   valor<-mean(win_rate)
-  print(paste('Champion ', nomes_champ[x], ' possuiu uma win rate de ', valor, '!'))
+  print(paste('Champion ', champ_names[x], ' possuiu uma win rate de ', valor, '!'))
 }
-
-champ_posicao<-which(grepl('Alistar',dados$team_1)|grepl('Alistar',dados$team_2))
-win_rate<-as.integer(dados$result[champ_posicao])
-mean(win_rate)
