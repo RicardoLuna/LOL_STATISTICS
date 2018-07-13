@@ -1,5 +1,7 @@
+library(ggplot2)
 work_station<-'C:/Users/ricardo/Documents/CAD'
 setwd(work_station)
+
 library(tidyr)
 champ_names<-c( 'Aatrox','Ahri','Akali','Alistar','Amumu','Anivia','Annie','Ashe',
                 'Aurelion Sol', 'Azir', 'Bard','Blitzcrank','Brand','Braum','Caitlyn','Camille',
@@ -23,7 +25,7 @@ champ_names<-c( 'Aatrox','Ahri','Akali','Alistar','Amumu','Anivia','Annie','Ashe
 
 dados<-read.csv('patch811.csv', stringsAsFactors = F)
 
-
+dados_old <- read.csv('patch811.csv', stringsAsFactors = F)
 # Concatena os valores dos nomes do champ como um único como uma única lista
 dados<-dados%>%
   unite(col = "team_1",
@@ -43,6 +45,7 @@ dados$result<-as.logical(dados$result)
 
 # Win rate para toda a base
 tamanho = length(champ_names)
+win_rate_final<-matrix(1:3*length(champ_names),length(champ_names),3)
 for (x in 1:tamanho){
   champ_posicao<-which(grepl(champ_names[x],dados$team_1))
   champ_posicao2<-which(grepl(champ_names[x],dados$team_2))
@@ -51,4 +54,13 @@ for (x in 1:tamanho){
   win_rate<-c(win_rate,win_temp)
   valor<-mean(win_rate)
   print(paste('Champion ', champ_names[x], ' possuiu uma win rate de ', valor, '!'))
+  win_rate_final[x,1]<-valor
+  win_rate_final[x,2]<-champ_names[x]
+  win_rate_final[x,3]<-colors()[x]
 }
+
+data_champion<-data.frame(nomes=win_rate_final[,2],rate=as.numeric(win_rate_final[,1]), cor=win_rate_final[,3])
+
+ggplot(data_champion, aes(x=c(1:length(champ_names)), y=rate)) +
+  geom_point() + 
+  geom_text(label=data_champion$nomes)
