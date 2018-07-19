@@ -66,9 +66,11 @@ data_champion<-data.frame(nomes=win_rate_final[,2],
                           rate=as.numeric(win_rate_final[,1]),
                           cor=win_rate_final[,3])
 
-ggplot(data_champion, aes(x=c(1:length(champ_names)), y=rate)) +
-  geom_point() + 
-  geom_text(label=data_champion$nomes)
+
+ggplot(data_champion, aes(x=1:length(champ_names), y=rate)) +
+  geom_label(label=data_champion$nomes, color="blue", size=5) + 
+  xlab("Champion") +
+  ylab("Win rate")
 
 # champiom's win rate by region
 rate_by_region <- c()
