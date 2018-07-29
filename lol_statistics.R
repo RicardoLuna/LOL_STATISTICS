@@ -45,9 +45,10 @@ dados$result[dados$result=='Defeat']<-F
 
 # Converte o tipo
 dados$result<-as.logical(dados$result)
-
+df_winrate<-data.frame(name = rep("", ))
 # Win rate para toda a base
 tamanho = length(champ_names)
+df_winrate<-data.frame(name = rep("", tamanho), rate = rep(0, tamanho))
 win_rate_final<-matrix(1:3*length(champ_names),length(champ_names),3)
 for (x in 1:tamanho){
   champ_posicao<-which(grepl(champ_names[x],dados$team_1))
@@ -59,13 +60,26 @@ for (x in 1:tamanho){
   print(paste('Champion ', champ_names[x], ' possuiu uma win rate de ', valor, '!'))
   win_rate_final[x,1]<-valor
   win_rate_final[x,2]<-champ_names[x]
-  win_rate_final[x,3]<-colors()[x]
 }
 
-data_champion<-data.frame(nomes=win_rate_final[,2],
-                          rate=as.numeric(win_rate_final[,1]),
-                          cor=win_rate_final[,3])
+colors <- c("green", "red", "blue", "yellow", "pink", "orange")
 
+data_champion<-data.frame(names=win_rate_final[,2],
+                          rate=as.numeric(win_rate_final[,1]),stringsAsFactors = F)
+data_champion<-data_champion[order(data_champion$rate, data_champion$names),]
+barplot(head(data_champion$rate), 
+        names.arg=head(data_champion$names), 
+        main="Lower win rate - Global",
+        xlab="Champion",
+        ylab="Win rate",
+        col=colors)
+
+barplot(tail(data_champion$rate), 
+        names.arg=tail(data_champion$names), 
+        main="Higher win rate - Global",
+        xlab="Champion",
+        ylab="Win rate",
+        col=colors)
 
 ggplot(data_champion, aes(x=1:length(champ_names), y=rate)) +
   geom_label(label=data_champion$nomes, color="blue", size=5) + 
@@ -107,7 +121,6 @@ most_popular <- rate_by_region %>%
   summarise(count = max(popularity)) %>%
   arrange(desc(count))
 
-colors <- c("green", "red", "blue", "yellow", "pink", "orange")
 
 barplot(head(most_popular$count), 
         names.arg=head(most_popular$champ), 
