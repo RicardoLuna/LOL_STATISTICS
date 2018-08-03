@@ -4,8 +4,6 @@
 # Alunos: Iverson Pereira                      #
 #         Ricardo Luna                         #
 ################################################
-
-library(tidyr)
 library(dplyr)
 library(stringr)
 
