@@ -31,7 +31,7 @@ dados<-dados%>%
 dados$result[dados$result=='Victory']<-T
 dados$result[dados$result=='Defeat']<-F
 dados$result<-as.logical(dados$result)
-
+dados<-dados[,-3]
 tamanho_base <-length(dados$team_1)
 
 df_knn<-data.frame(dist_team=rep(0,tamanho_base*2), classe = rep(0, tamanho_base*2))
