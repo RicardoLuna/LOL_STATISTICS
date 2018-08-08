@@ -8,12 +8,10 @@
 
 
 # use this if you need to install the packages
-install.packages('ggplot2')
 install.packages('tidyr')
 install.packages('dplyr')
 
 # put here the libraries
-library(ggplot2)
 library(tidyr)
 library(dplyr)
 
@@ -67,24 +65,29 @@ colors <- c("green", "red", "blue", "yellow", "pink", "orange")
 data_champion<-data.frame(names=win_rate_final[,2],
                           rate=as.numeric(win_rate_final[,1]),stringsAsFactors = F)
 data_champion<-data_champion[order(data_champion$rate, data_champion$names),]
-barplot(head(data_champion$rate), 
-        names.arg=head(data_champion$names), 
-        main="Lower win rate - Global",
-        xlab="Champion",
-        ylab="Win rate",
-        col=colors)
 
+# win rate global
+par(mfrow=c(1,2))
 barplot(tail(data_champion$rate), 
         names.arg=tail(data_champion$names), 
         main="Higher win rate - Global",
+        ylim=c(0,max(tail(data_champion$rate))),
         xlab="Champion",
         ylab="Win rate",
         col=colors)
 
-ggplot(data_champion, aes(x=1:length(champ_names), y=rate)) +
-  geom_label(label=data_champion$nomes, color="blue", size=5) + 
-  xlab("Champion") +
-  ylab("Win rate")
+legend("bottomright", legend = paste(round(tail(data_champion$rate), digits = 4)*100, '%'),
+       col =colors, pch = 15)
+
+barplot(head(data_champion$rate), 
+        names.arg=head(data_champion$names), 
+        main="Lower win rate - Global",
+        ylim=c(0,max(head(data_champion$rate))),
+        xlab="Champion",
+        ylab="Win rate",
+        col=colors)
+legend("bottomright", legend = paste(round(head(data_champion$rate), digits = 4)*100, '%'),
+       col =colors, pch = 15)
 
 # champiom's win rate by region
 rate_by_region <- c()
