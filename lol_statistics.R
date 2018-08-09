@@ -16,7 +16,7 @@ library(tidyr)
 library(dplyr)
 
 # set here your work station
-work_station<-'/home/iverson/git/LOL_STATISTICS/'
+work_station<-'/home/iverson.luis/Downloads/LOL_STATISTICS/'
 setwd(work_station)
 
 # read the file with champ names
@@ -99,29 +99,42 @@ for (x in 1:tamanho){
   champ_data_team2$result <- !champ_data_team2$result
   
   champ_data <- rbind(champ_data_team1, champ_data_team2)
+
+  champ_popularity <- c()
   
-  champ_rate_by_region <- champ_data %>%
-                    group_by(server) %>%
-                    summarise(
-                      rate = mean(result)
-                    )
+  for(y in 1:length(regions)){
+    champ_popularity[y] <- sum(champ_data$server == regions[y])
+  }
+  print(champ_names[x])
+  champ_popularity <- data.frame(server = regions, value = champ_popularity)
   
-  champ_popularity <- length(champ_data$server)
+  print(champ_popularity)
   
   rate_by_region <- rbind(rate_by_region, data.frame(champ=champ_names[x], champ_rate_by_region, popularity = champ_popularity))
 }
 
-# victory rate per region independ of the champion
-higher_rates <- rate_by_region %>%
-                group_by(champ,server) %>%
-                summarise(rate = max(rate))
-
 # most popular champions in the world
 most_popular <- rate_by_region %>%
-  group_by(champ) %>%
-  summarise(count = max(popularity)) %>%
+  group_by(champ, popularity.server) %>%
+  summarise(count = sum(popularity.value)) %>%
   arrange(desc(count))
 
+# most popular champions in the world
+most_popular_by_region <- rate_by_region %>%
+  filter(popularity.server != "www")  %>%
+  group_by(champ, popularity.server) %>%
+  summarise(count = sum(popularity.value)) %>%
+  arrange(desc(count))
+
+barplot(most_popular_by_region$count[1:10], 
+        names.arg=most_popular_by_region$champ[1:10], 
+        main="Most popular champions per region",
+        xlab="Champion",
+        ylab="Matches",
+        col=colors)
+
+legend("bottomright", legend = most_popular_by_region$popularity.server[1:10],
+       col =colors, pch = 15)
 
 barplot(head(most_popular$count), 
         names.arg=head(most_popular$champ), 
@@ -129,8 +142,17 @@ barplot(head(most_popular$count),
         xlab="Champion",
         ylab="Matches",
         col=colors)
+legend("bottomright", legend = head(most_popular_by_region$popularity.server),
+       col =colors, pch = 15)
 
-# TODO - generate most popular champions per region
+barplot(tail(most_popular$count), 
+        names.arg=tail(most_popular$champ), 
+        main="Most popular champions - Global",
+        xlab="Champion",
+        ylab="Matches",
+        col=colors)
+legend("bottomright", legend = tail(most_popular$champ),
+       col =colors, pch = 15)
 
 # get the global rate for each champion
 global_rate <- aggregate(formula = rate ~ champ,
