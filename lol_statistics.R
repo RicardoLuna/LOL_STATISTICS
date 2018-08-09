@@ -132,7 +132,6 @@ barplot(most_popular_by_region$count[1:10],
         xlab="Champion",
         ylab="Matches",
         col=colors)
-
 legend("bottomright", legend = most_popular_by_region$popularity.server[1:10],
        col =colors, pch = 15)
 
@@ -142,7 +141,7 @@ barplot(head(most_popular$count),
         xlab="Champion",
         ylab="Matches",
         col=colors)
-legend("bottomright", legend = head(most_popular_by_region$popularity.server),
+legend("bottomright", legend = head(most_popular$champ),
        col =colors, pch = 15)
 
 barplot(tail(most_popular$count), 
