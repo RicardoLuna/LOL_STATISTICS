@@ -43,11 +43,9 @@ dados$result[dados$result=='Defeat']<-F
 
 # Converte o tipo
 dados$result<-as.logical(dados$result)
-df_winrate<-data.frame(name = rep("", ))
 # Win rate para toda a base
 tamanho = length(champ_names)
-df_winrate<-data.frame(name = rep("", tamanho), rate = rep(0, tamanho))
-win_rate_final<-matrix(1:3*length(champ_names),length(champ_names),3)
+win_rate_final<-matrix(1:2*length(champ_names),length(champ_names),2)
 for (x in 1:tamanho){
   champ_posicao<-which(grepl(champ_names[x],dados$team_1))
   champ_posicao2<-which(grepl(champ_names[x],dados$team_2))
